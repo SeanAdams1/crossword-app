@@ -10,6 +10,8 @@ import org.scalajs.dom.raw.HTMLStyleElement
 
 object Components {
 
+  def divit(x:String): Tag = div(s)
+
   def getNumber(i: Int): Tag = if (i == 0) b("") else b(i.toString)
 
   def numberSquare(i: Int): Tag = {
@@ -37,11 +39,10 @@ object Components {
       crosswordStyles.squareInputWhite,
       maxlength := 1,
       tabindex := -1,
-      fontFamily := "Verdana, Geneva, sans-serif",
-      onfocus := "highlightClue(this)",
-      onblur := "unHighlightClue()"
+      fontFamily := "Verdana, Geneva, sans-serif"
     )
   }
+
 
   def letterSquare(sqID: squareID, colour: CellColour): Tag = if (colour == White) whiteSquare(sqID.toString) else blackSquare
 
@@ -56,11 +57,11 @@ object Components {
 
   def clueListItem(clue: Clue): Tag = {
     li(
+      cls := "clue_list_item",
       id := "A" + clue.id,
       whiteSpace := "normal",
       wordWrap := "break-word",
       clue.toString,
-      onclick := "highlightWordClue(this)"
     )
   }
 
@@ -74,11 +75,11 @@ object Components {
     )
   }
 
-  def crosswordButton(text: String, onClick: String) : Tag = {
+  def crosswordButton(text: String,idText:String) : Tag = {
     button(
       crosswordStyles.button,
       text,
-      onclick := onClick
+      id := idText
     )
   }
 
@@ -91,13 +92,13 @@ object Components {
 
   val buttons: List[(String,String)] = {
     List(
-      // (Text, onClick)
-      ("Clear selected", "clearSelected()"),
-      ("Clear all", "clearAll()"),
-      ("Check selected", "checkSelected()"),
-      ("Check all", "checkAll()"),
-      ("Reveal selected", "revealThis()"),
-      ("Reveal all", "revealAll()")
+      // (Text)
+      ("Clear selected", "clear_selected"),
+      ("Clear all", "clear_all"),
+      ("Check selected", "check_selected"),
+      ("Check all", "check_all"),
+      ("Reveal selected", "reveal_selected"),
+      ("Reveal all", "reveal_all")
     )
   }
 
@@ -118,7 +119,7 @@ object Components {
         div(
           crosswordStyles.crosswordColumn,
           grid(crossword),
-          for {(text, onClick) <- buttons} yield crosswordButton(text, onClick)
+          for {(text,idText) <- buttons} yield crosswordButton(text,idText)
         ),
         clueColumn("Across", crossword.acrossClues),
         clueColumn("Down", crossword.downClues)

@@ -1,4 +1,5 @@
 package object shared {
+  import upickle.default.{ReadWriter => RW, macroRW}
 
   //Solution
   case class Solution(solution: List[String]) {
@@ -9,6 +10,10 @@ package object shared {
     val numberOfWords: Int = solution.length
     val solutionLength: Int = solution.map(_.length).sum
     val wordLengths: String = if (solution.isEmpty) "" else s"(${solution.map(_.length) mkString ","})"
+  }
+
+  object Solution {
+    implicit val rw: RW[Solution] = macroRW
   }
 
   //ClueID
@@ -25,9 +30,16 @@ package object shared {
     override def toString: String = s"$number${direction.toString.head}"
   }
 
+  object ClueID {
+    implicit val rw: RW[ClueID] = macroRW
+  }
+
   //Direction
   sealed trait Direction {
     def isAcross: Boolean = this == Across
+  }
+  object Direction {
+    implicit val rw: RW[Direction] = macroRW
   }
 
   case object Across extends Direction
@@ -68,12 +80,20 @@ package object shared {
     def <(that: squareID): Boolean = this.position < that.position
   }
 
+  object squareID {
+    implicit val rw: RW[squareID] = macroRW
+  }
+
   // Clue
-  case class Clue(number: Int, direction: Direction, solution: Solution, clue: String, linkedClues: List[ClueID])(implicit grid: CrosswordGrid) {
+  case class Clue(number: Int, direction: Direction, solution: Solution, clue: String, linkedClues: List[ClueID], grid: CrosswordGrid) {
 
     val id: ClueID = ClueID(number, direction)
     val squares: squareList = grid.getSquares(id)
     override def toString: String = s"$number ${if (number < 10) " " else ""}$clue ${if (solution.solutionLength > 0) solution.wordLengths else ""}"
+  }
+
+  object Clue {
+    implicit val rw: RW[Clue] = macroRW
   }
 
   type squareList = List[squareID]

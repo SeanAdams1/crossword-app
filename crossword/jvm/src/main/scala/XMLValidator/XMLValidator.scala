@@ -68,8 +68,8 @@ object XMLValidator {
     val parentClue = (node \ "parent").map(_.text.toClueID).headOption
     val linkedClues = (node \ "linked").map(_.text.split(',').toList.map(_.toClueID)).headOption
 
-    if (parentClue.isDefined) Clue(number, direction, Solution(Nil), s"See ${parentClue.get.number}", linkedClues.getOrElse(Nil))
-    else Clue(number, direction, Solution(solution), text, linkedClues.getOrElse(Nil))
+    if (parentClue.isDefined) Clue(number, direction, Solution(Nil), s"See ${parentClue.get.number}", linkedClues.getOrElse(Nil), gridIn)
+    else Clue(number, direction, Solution(solution), text, linkedClues.getOrElse(Nil), gridIn)
 
   }
 

@@ -1,5 +1,7 @@
 package shared
 
+import upickle.default.{ReadWriter => RW, macroRW}
+
 case class CrosswordClass(clues: List[Clue], gridLayout: CrosswordGrid){
 
   val sortedClues: List[Clue] = clues.sortWith(_.id < _.id)
@@ -8,7 +10,7 @@ case class CrosswordClass(clues: List[Clue], gridLayout: CrosswordGrid){
   val downClues: List[Clue] = sortedClues.dropWhile(_.direction.isAcross)
   val squareMap: Map[Clue,squareList] = sortedClues.map(a => (a,getSquares(a))).toMap.withDefaultValue(Nil)
   val clueMap: Map[squareID,List[Clue]] = squareMap.toList.flatMap({case(a,b) => b.map(b => (b,a))}).groupBy(_._1).map({case (b,ls) => (b,ls.map(_._2).sortWith(_.id < _.id))})
-
+  val noClue: Clue = Clue(0,Across,Solution(Nil),"",Nil,gridLayout)
 
   def getNextClueFrom(ls:List[Clue])(clue:Clue): Clue = {
     if (clue.id == "0A".toClueID) ls.head
@@ -52,5 +54,7 @@ case class CrosswordClass(clues: List[Clue], gridLayout: CrosswordGrid){
   def getSquare(f:squareID => Option[squareID])(sqID: squareID): squareID = f(sqID).get
 }
 
-
+object CrosswordClass {
+  implicit val rw: RW[CrosswordClass] = macroRW
+}
 

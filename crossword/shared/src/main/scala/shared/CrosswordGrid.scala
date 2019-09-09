@@ -1,5 +1,6 @@
 package shared
 
+import upickle.default.{ReadWriter => RW, macroRW}
 //CrosswordGrid
 case class CrosswordGrid(width: Int, height: Int, cellString: String) {
   assert(width >= 5, "Width must be at least 5")
@@ -87,5 +88,7 @@ case class CrosswordGrid(width: Int, height: Int, cellString: String) {
 object CrosswordGrid {
   //If we want a square grid then we can just pass in one length
   def apply(side: Int, cellString: String) = new CrosswordGrid(side, side, cellString)
+  //Add this in so uPickle can serialize this
+  implicit val rw: RW[CrosswordGrid] = macroRW
 }
 
